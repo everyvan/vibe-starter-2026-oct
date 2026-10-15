@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-masthead {
+    font-family: 'UnifrakturMaguntia', 'Chomsky', serif;
+    font-feature-settings: "liga" 1;
+    letter-spacing: -0.5px;
+  }
+
+  .font-nyt-serif {
+    font-family: 'Newsreader', 'Libre Baskerville', Georgia, serif;
+  }
+
+  .font-nyt-sans {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .headline-hover {
+    transition: color 0.15s ease-in-out;
+  }
+  .headline-hover:hover {
+    color: #555555;
+  }
+
+  .first-letter-dropcap::first-letter {
+    font-family: 'Newsreader', Georgia, serif;
+    float: left;
+    font-size: 3.75rem;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-bottom: 2px;
+    font-weight: 700;
+  }
+}

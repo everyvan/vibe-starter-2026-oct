@@ -1,0 +1,6 @@
+{
+  "name": "The New York Times",
+  "description": "Digital broadsheet newspaper with breaking news, live analysis, opinion essays, section feeds, and reader experience.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
