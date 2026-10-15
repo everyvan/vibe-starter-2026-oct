@@ -1,5 +1,6 @@
 import React from 'react';
-import { Search, Bookmark, Check } from 'lucide-react';
+import { Search, Bookmark, Check, CloudSun, Gift, Sparkles } from 'lucide-react';
+import { NYTMasthead } from './NYTMasthead';
 
 interface SiteHeaderProps {
   currentScreen: string;
@@ -8,6 +9,7 @@ interface SiteHeaderProps {
   onOpenSubscribe: () => void;
   onOpenLogin: () => void;
   onOpenSaved: () => void;
+  onOpenGiftModal?: () => void;
   savedCount: number;
   currentEdition: string;
   onSelectEdition: (edition: string) => void;
@@ -24,6 +26,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
   onOpenSubscribe,
   onOpenLogin,
   onOpenSaved,
+  onOpenGiftModal,
   savedCount,
   currentEdition,
   onSelectEdition,
@@ -56,11 +59,13 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           <button
             onClick={onOpenSearch}
             aria-label="Search articles"
-            className="p-1 hover:opacity-70 text-black flex items-center gap-1 cursor-pointer"
-            title="Search the Times"
+            className="p-1 hover:opacity-70 text-black flex items-center gap-1.5 cursor-pointer group"
+            title="Search the Times (Press '/' or Cmd+K)"
           >
             <Search className="w-4 h-4 stroke-[2.5]" />
-            <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider text-gray-700">Search</span>
+            <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider text-gray-700 group-hover:text-black">
+              Search
+            </span>
           </button>
 
           <div className="hidden md:flex items-center space-x-2 text-[#727272] uppercase text-[10px] tracking-wider font-semibold">
@@ -69,7 +74,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 <button
                   onClick={() => onSelectEdition(edition)}
                   className={`hover:text-black transition-colors ${
-                    currentEdition === edition ? 'text-black font-bold underline underline-offset-2' : ''
+                    currentEdition === edition ? 'text-black font-bold underline underline-offset-4' : ''
                   }`}
                 >
                   {edition}
@@ -85,12 +90,24 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           {/* Quick toggle between HTML placeholder image & Generated Editorial Photo */}
           <button
             onClick={onToggleImageMode}
-            className="hidden sm:flex items-center gap-1.5 text-[10px] text-gray-500 hover:text-black uppercase tracking-wider px-2 py-1 border border-dashed border-gray-300 rounded"
+            className="hidden lg:flex items-center gap-1.5 text-[10px] text-gray-600 hover:text-black uppercase tracking-wider px-2 py-1 border border-dashed border-gray-300 rounded hover:border-gray-500 transition-colors"
             title="Switch between HTML placeholder graphic and real editorial photograph"
           >
-            <span>Photo:</span>
-            <span className="font-semibold text-gray-800">{useHotlinkImage ? 'SVG Placeholder' : 'Editorial Photo'}</span>
+            <span>Photo Mode:</span>
+            <span className="font-bold text-gray-900">{useHotlinkImage ? 'SVG Placeholder' : 'Editorial High-Res'}</span>
           </button>
+
+          {/* Gift Article feature */}
+          {onOpenGiftModal && (
+            <button
+              onClick={onOpenGiftModal}
+              className="hidden sm:flex items-center gap-1 text-[11px] text-gray-700 hover:text-black px-2 py-1 rounded hover:bg-gray-100 transition-colors"
+              title="Give unlocked articles to friends"
+            >
+              <Gift className="w-3.5 h-3.5 text-gray-600" />
+              <span className="font-semibold">Gift Article</span>
+            </button>
+          )}
 
           {/* Saved Articles button */}
           <button
@@ -110,7 +127,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           {/* Subscribe Button */}
           <button
             onClick={onOpenSubscribe}
-            className="bg-[#567b95] hover:bg-[#326891] text-white text-[11px] tracking-wider font-semibold px-3 py-1.5 rounded uppercase transition-colors shadow-xs"
+            className="bg-[#567b95] hover:bg-[#326891] text-white text-[11px] tracking-wider font-semibold px-3 py-1.5 rounded uppercase transition-colors shadow-xs active:scale-[0.98]"
           >
             Subscribe for $1/week
           </button>
@@ -132,29 +149,34 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
         </div>
       </div>
 
-      {/* Date, Today's Paper & Stock Indices */}
+      {/* Date, Weather, Today's Paper & Stock Indices */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[12px] font-sans text-gray-600 pt-1 pb-2 border-b border-[#e2e2e2]" data-purpose="masthead-meta">
         <div className="flex items-center space-x-3 font-medium text-gray-800 text-[12px]">
-          <time className="font-bold" dateTime="2025-10-15">Wednesday, October 15, 2025</time>
+          <time className="font-bold text-black" dateTime="2025-10-15">Wednesday, October 15, 2025</time>
           <span className="text-gray-400">|</span>
           <button
             onClick={() => onNavigate('todays-paper')}
-            className={`hover:underline text-gray-600 font-normal ${
+            className={`hover:underline text-gray-700 font-normal ${
               currentScreen === 'todays-paper' ? 'underline font-semibold text-black' : ''
             }`}
           >
             Today’s Paper
           </button>
+          <span className="text-gray-300 hidden sm:inline">|</span>
+          <div className="hidden sm:flex items-center gap-1 text-gray-600 text-[11px]">
+            <CloudSun className="w-3.5 h-3.5 text-amber-500" />
+            <span>64°F New York</span>
+          </div>
         </div>
 
         <div className="hidden lg:flex items-center space-x-4 text-[11px] text-gray-600">
           <div className="flex items-center space-x-1.5">
             <span className="font-bold text-gray-800">S&P 500</span>
-            <span className="text-emerald-700 font-medium">+0.42% ▲</span>
+            <span className="text-emerald-700 font-semibold">+0.42% ▲</span>
           </div>
           <div className="flex items-center space-x-1.5">
             <span className="font-bold text-gray-800">Nasdaq</span>
-            <span className="text-emerald-700 font-medium">+0.68% ▲</span>
+            <span className="text-emerald-700 font-semibold">+0.68% ▲</span>
           </div>
           <div className="flex items-center space-x-1.5 text-gray-500">
             <span className="font-medium text-gray-700">Dow</span>
@@ -165,13 +187,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
 
       {/* Main Blackletter Masthead Title */}
       <div className="text-center py-2 sm:py-3 border-b-4 border-double border-black" data-purpose="masthead-brand">
-        <h1
-          onClick={() => onNavigate('frontpage')}
-          className="font-masthead text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight leading-none text-black cursor-pointer select-none hover:opacity-90 transition-opacity"
-          title="The New York Times - Return to Front Page"
-        >
-          The New York Times
-        </h1>
+        <NYTMasthead onClick={() => onNavigate('frontpage')} />
       </div>
 
       {/* Primary Horizontal Navigation */}
@@ -193,15 +209,17 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
       </nav>
 
       {/* Sub-header Alert / Special Contextual Banner */}
-      <div className="flex items-center justify-center space-x-2 py-1.5 border-b border-[#e2e2e2] text-xs text-gray-600 bg-gray-50/70" data-purpose="trending-banner">
-        <span className="font-nyt-serif italic text-gray-500">These top stories are</span>
-        <button
-          onClick={() => onNavigate('frontpage')}
-          className="underline font-sans font-medium text-gray-800 hover:text-black"
-        >
-          free to read.
-        </button>
-        <span className="text-gray-400 text-[10px] hidden sm:inline">· Independent journalism funded by subscribers</span>
+      <div className="flex items-center justify-between px-2 py-1.5 border-b border-[#e2e2e2] text-xs text-gray-600 bg-gray-50/70" data-purpose="trending-banner">
+        <div className="flex items-center space-x-2 mx-auto">
+          <span className="font-nyt-serif italic text-gray-500">These top stories are</span>
+          <button
+            onClick={() => onNavigate('frontpage')}
+            className="underline font-sans font-medium text-gray-800 hover:text-black"
+          >
+            free to read.
+          </button>
+          <span className="text-gray-400 text-[10px] hidden sm:inline">· Independent journalism supported by subscribers</span>
+        </div>
       </div>
     </header>
   );

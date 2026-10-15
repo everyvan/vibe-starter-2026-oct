@@ -260,42 +260,78 @@ export const FrontpageView: React.FC<FrontpageViewProps> = ({
 
             <div className="space-y-4">
               {/* Opinion Columnist 1 */}
-              <article className="space-y-1 border-b border-[#e2e2e2] pb-3 group cursor-pointer" onClick={() => onOpenArticle(opinion1.id)}>
-                <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
-                  {opinion1.byline}
-                </span>
-                <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
-                  {opinion1.title}
-                </h4>
-                <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
-                  {opinion1.summary}
-                </p>
+              <article className="border-b border-[#e2e2e2] pb-3 group cursor-pointer" onClick={() => onOpenArticle(opinion1.id)}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 flex-1">
+                    <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
+                      {opinion1.byline}
+                    </span>
+                    <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
+                      {opinion1.title}
+                    </h4>
+                    <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
+                      {opinion1.summary}
+                    </p>
+                  </div>
+                  {opinion1.imageUrl && (
+                    <img
+                      src={opinion1.imageUrl}
+                      alt={opinion1.byline}
+                      className="w-12 h-12 rounded-full object-cover shrink-0 border border-gray-200 shadow-2xs"
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
+                </div>
               </article>
 
               {/* Opinion Columnist 2 */}
-              <article className="space-y-1 border-b border-[#e2e2e2] pb-3 group cursor-pointer" onClick={() => onOpenArticle(opinion2.id)}>
-                <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
-                  {opinion2.byline}
-                </span>
-                <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
-                  {opinion2.title}
-                </h4>
-                <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
-                  {opinion2.summary}
-                </p>
+              <article className="border-b border-[#e2e2e2] pb-3 group cursor-pointer" onClick={() => onOpenArticle(opinion2.id)}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 flex-1">
+                    <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
+                      {opinion2.byline}
+                    </span>
+                    <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
+                      {opinion2.title}
+                    </h4>
+                    <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
+                      {opinion2.summary}
+                    </p>
+                  </div>
+                  {opinion2.imageUrl && (
+                    <img
+                      src={opinion2.imageUrl}
+                      alt={opinion2.byline}
+                      className="w-12 h-12 rounded-full object-cover shrink-0 border border-gray-200 shadow-2xs"
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
+                </div>
               </article>
 
               {/* Opinion Columnist 3 */}
-              <article className="space-y-1 group cursor-pointer" onClick={() => onOpenArticle(opinion3.id)}>
-                <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
-                  {opinion3.byline}
-                </span>
-                <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
-                  {opinion3.title}
-                </h4>
-                <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
-                  {opinion3.summary}
-                </p>
+              <article className="group cursor-pointer" onClick={() => onOpenArticle(opinion3.id)}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 flex-1">
+                    <span className="text-xs font-sans font-bold text-gray-900 block group-hover:underline">
+                      {opinion3.byline}
+                    </span>
+                    <h4 className="font-nyt-serif text-sm font-bold leading-snug headline-hover cursor-pointer text-gray-950">
+                      {opinion3.title}
+                    </h4>
+                    <p className="font-nyt-serif text-xs text-gray-600 leading-relaxed">
+                      {opinion3.summary}
+                    </p>
+                  </div>
+                  {opinion3.imageUrl && (
+                    <img
+                      src={opinion3.imageUrl}
+                      alt={opinion3.byline}
+                      className="w-12 h-12 rounded-full object-cover shrink-0 border border-gray-200 shadow-2xs"
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
+                </div>
               </article>
             </div>
           </div>

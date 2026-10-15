@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Search, Check, Bookmark, ArrowRight, ShieldCheck, Sparkles, Trash2 } from 'lucide-react';
+import { X, Search, Check, Bookmark, ArrowRight, ShieldCheck, Sparkles, Trash2, Gift } from 'lucide-react';
 import { Article, ARTICLES } from '../data/newsData';
 
 // SEARCH MODAL
@@ -306,6 +306,84 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     </div>
   );
 };
+
+// GIFT ARTICLE MODAL
+interface GiftArticleModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  articleTitle: string;
+}
+
+export const GiftArticleModal: React.FC<GiftArticleModalProps> = ({
+  isOpen,
+  onClose,
+  articleTitle,
+}) => {
+  const [copied, setCopied] = useState(false);
+  const giftLink = `${window.location.origin}?gift=unlocked-${Date.now()}`;
+
+  if (!isOpen) return null;
+
+  const handleCopy = () => {
+    navigator.clipboard?.writeText(giftLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-xs">
+      <div className="bg-white w-full max-w-md rounded-sm shadow-2xl border border-gray-300 p-6 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-black"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-wider text-[#567b95] mb-2">
+          <Gift className="w-4 h-4" />
+          <span>Subscriber Benefit</span>
+        </div>
+
+        <h3 className="font-nyt-serif text-2xl font-bold text-gray-950 mb-2">
+          Gift This Article
+        </h3>
+
+        <p className="font-nyt-serif text-sm text-gray-700 leading-relaxed mb-4">
+          As a Times subscriber, you can gift 10 unlocked articles each month. Anyone can read them, even without a subscription.
+        </p>
+
+        <div className="bg-gray-50 border border-gray-200 p-3 rounded-xs mb-4">
+          <span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-wider block">Article</span>
+          <span className="font-nyt-serif text-sm font-semibold text-gray-900 line-clamp-2">{articleTitle}</span>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              readOnly
+              value={giftLink}
+              className="flex-1 p-2 bg-gray-100 border border-gray-300 rounded text-xs font-mono text-gray-600 focus:outline-none"
+            />
+            <button
+              onClick={handleCopy}
+              className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded text-xs font-sans font-semibold uppercase tracking-wider transition-colors shrink-0"
+            >
+              {copied ? 'Copied!' : 'Copy Link'}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] font-sans text-gray-500 pt-2 border-t border-gray-100">
+            <span>Remaining this month:</span>
+            <span className="font-bold text-black">10 of 10 gift articles</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 // SAVED ARTICLES DRAWER
 interface SavedArticlesDrawerProps {

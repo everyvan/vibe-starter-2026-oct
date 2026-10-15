@@ -11,7 +11,10 @@ import {
   Type,
   Gift,
   Check,
-  ChevronRight
+  ChevronRight,
+  Sun,
+  Moon,
+  BookOpen
 } from 'lucide-react';
 import { Article, ARTICLES } from '../data/newsData';
 
@@ -21,6 +24,7 @@ interface ArticleReaderViewProps {
   onNavigateArticle: (id: string) => void;
   isBookmarked: boolean;
   onToggleBookmark: () => void;
+  onOpenGiftModal?: () => void;
   useHotlinkImage: boolean;
 }
 
@@ -30,6 +34,7 @@ export const ArticleReaderView: React.FC<ArticleReaderViewProps> = ({
   onNavigateArticle,
   isBookmarked,
   onToggleBookmark,
+  onOpenGiftModal,
   useHotlinkImage,
 }) => {
   // Audio player state
@@ -40,6 +45,9 @@ export const ArticleReaderView: React.FC<ArticleReaderViewProps> = ({
   // Text size state: 'sm' | 'base' | 'lg'
   const [textSize, setTextSize] = useState<'sm' | 'base' | 'lg'>('base');
   
+  // Theme state: 'paper' | 'sepia' | 'night'
+  const [readingTheme, setReadingTheme] = useState<'paper' | 'sepia' | 'night'>('paper');
+
   // Share toast state
   const [copiedShare, setCopiedShare] = useState(false);
   
@@ -104,85 +112,138 @@ export const ArticleReaderView: React.FC<ArticleReaderViewProps> = ({
     textSize === 'sm'
       ? 'text-base leading-relaxed'
       : textSize === 'lg'
-      ? 'text-xl leading-loose'
-      : 'text-lg leading-relaxed';
+      ? 'text-xl sm:text-2xl leading-loose'
+      : 'text-lg sm:text-[19px] leading-relaxed';
+
+  // Theme container classes
+  const themeClasses =
+    readingTheme === 'sepia'
+      ? 'bg-[#fbf7ee] text-[#2c2621]'
+      : readingTheme === 'night'
+      ? 'bg-[#18181b] text-[#f4f4f5]'
+      : 'bg-white text-gray-900';
+
+  const themeBorder =
+    readingTheme === 'night' ? 'border-[#27272a]' : 'border-[#e2e2e2]';
 
   return (
-    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      
-      {/* Top Breadcrumb & Quick Controls */}
-      <div className="flex items-center justify-between border-b border-[#e2e2e2] pb-3 mb-6 font-sans text-xs text-gray-600">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 hover:text-black font-medium transition-colors cursor-pointer group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-          <span>Front Page</span>
-          {article.section && (
-            <>
-              <span className="text-gray-300">/</span>
-              <span className="uppercase tracking-wider font-semibold text-gray-800">{article.section}</span>
-            </>
-          )}
-        </button>
-
-        <div className="flex items-center gap-4">
-          {/* Text Size Adjuster */}
-          <div className="flex items-center gap-1 border border-gray-300 rounded px-1.5 py-0.5 text-[11px]">
-            <Type className="w-3.5 h-3.5 text-gray-500" />
-            <button
-              onClick={() => setTextSize('sm')}
-              className={`px-1 rounded ${textSize === 'sm' ? 'font-bold bg-gray-200' : 'hover:bg-gray-100'}`}
-              title="Small text"
-            >
-              A-
-            </button>
-            <button
-              onClick={() => setTextSize('base')}
-              className={`px-1 rounded ${textSize === 'base' ? 'font-bold bg-gray-200' : 'hover:bg-gray-100'}`}
-              title="Medium text"
-            >
-              A
-            </button>
-            <button
-              onClick={() => setTextSize('lg')}
-              className={`px-1 rounded ${textSize === 'lg' ? 'font-bold bg-gray-200' : 'hover:bg-gray-100'}`}
-              title="Large text"
-            >
-              A+
-            </button>
-          </div>
-
-          {/* Bookmark Button */}
+    <div className={`transition-colors duration-200 min-h-screen py-6 ${themeClasses}`}>
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Top Breadcrumb & Quick Controls */}
+        <div className={`flex flex-wrap items-center justify-between border-b pb-3 mb-6 font-sans text-xs gap-3 ${themeBorder} ${readingTheme === 'night' ? 'text-gray-400' : 'text-gray-600'}`}>
           <button
-            onClick={onToggleBookmark}
-            className={`flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded transition-colors ${
-              isBookmarked ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-100 border border-gray-300'
-            }`}
+            onClick={onBack}
+            className={`flex items-center gap-1.5 font-medium transition-colors cursor-pointer group ${readingTheme === 'night' ? 'hover:text-white' : 'hover:text-black'}`}
           >
-            <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
-            <span>{isBookmarked ? 'Saved' : 'Save'}</span>
-          </button>
-
-          {/* Share Button */}
-          <button
-            onClick={handleCopyShare}
-            className="flex items-center gap-1 text-[11px] font-medium text-gray-700 hover:bg-gray-100 border border-gray-300 px-2 py-1 rounded transition-colors relative"
-          >
-            {copiedShare ? (
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            <span>Front Page</span>
+            {article.section && (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700 font-semibold">Copied</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5" />
-                <span>Share</span>
+                <span className="text-gray-400">/</span>
+                <span className={`uppercase tracking-wider font-semibold ${readingTheme === 'night' ? 'text-gray-200' : 'text-gray-800'}`}>
+                  {article.section}
+                </span>
               </>
             )}
           </button>
+
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+            {/* Reading Theme Toggle */}
+            <div className={`flex items-center border rounded px-1 py-0.5 text-[11px] gap-1 ${readingTheme === 'night' ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
+              <button
+                onClick={() => setReadingTheme('paper')}
+                className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${readingTheme === 'paper' ? 'bg-gray-200 text-black font-bold' : 'text-gray-500'}`}
+                title="Paper White Mode"
+              >
+                Paper
+              </button>
+              <button
+                onClick={() => setReadingTheme('sepia')}
+                className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${readingTheme === 'sepia' ? 'bg-[#e7dec8] text-[#2c2621] font-bold' : 'text-gray-500'}`}
+                title="Warm Sepia Newsprint"
+              >
+                Sepia
+              </button>
+              <button
+                onClick={() => setReadingTheme('night')}
+                className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${readingTheme === 'night' ? 'bg-gray-700 text-white font-bold' : 'text-gray-500'}`}
+                title="Night Reading Mode"
+              >
+                Night
+              </button>
+            </div>
+
+            {/* Text Size Adjuster */}
+            <div className={`flex items-center gap-1 border rounded px-1.5 py-0.5 text-[11px] ${readingTheme === 'night' ? 'border-gray-700 bg-gray-800' : 'border-gray-300 bg-white'}`}>
+              <Type className="w-3.5 h-3.5 text-gray-400" />
+              <button
+                onClick={() => setTextSize('sm')}
+                className={`px-1 rounded ${textSize === 'sm' ? 'font-bold bg-gray-300 text-black' : 'hover:opacity-70'}`}
+                title="Small text"
+              >
+                A-
+              </button>
+              <button
+                onClick={() => setTextSize('base')}
+                className={`px-1 rounded ${textSize === 'base' ? 'font-bold bg-gray-300 text-black' : 'hover:opacity-70'}`}
+                title="Medium text"
+              >
+                A
+              </button>
+              <button
+                onClick={() => setTextSize('lg')}
+                className={`px-1 rounded ${textSize === 'lg' ? 'font-bold bg-gray-300 text-black' : 'hover:opacity-70'}`}
+                title="Large text"
+              >
+                A+
+              </button>
+            </div>
+
+            {/* Gift Article Button */}
+            {onOpenGiftModal && (
+              <button
+                onClick={onOpenGiftModal}
+                className="hidden sm:flex items-center gap-1 text-[11px] font-medium border border-gray-300 px-2 py-1 rounded hover:bg-gray-100 transition-colors"
+                title="Gift this article"
+              >
+                <Gift className="w-3.5 h-3.5 text-[#567b95]" />
+                <span>Gift</span>
+              </button>
+            )}
+
+            {/* Bookmark Button */}
+            <button
+              onClick={onToggleBookmark}
+              className={`flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded transition-colors ${
+                isBookmarked
+                  ? 'bg-black text-white dark:bg-white dark:text-black'
+                  : 'hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-current' : ''}`} />
+              <span>{isBookmarked ? 'Saved' : 'Save'}</span>
+            </button>
+
+            {/* Share Button */}
+            <button
+              onClick={handleCopyShare}
+              className="flex items-center gap-1 text-[11px] font-medium hover:bg-gray-100 border border-gray-300 px-2 py-1 rounded transition-colors relative"
+            >
+              {copiedShare ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700 font-semibold">Copied</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>Share</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Main Article Header */}
       <header className="max-w-[760px] mx-auto space-y-3 mb-6">
@@ -218,65 +279,87 @@ export const ArticleReaderView: React.FC<ArticleReaderViewProps> = ({
         </div>
       </header>
 
-      {/* Audio Player Bar (Listen to Article) */}
-      <div className="max-w-[760px] mx-auto bg-gray-50 border border-gray-200 rounded-sm p-3 mb-8">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors"
-                 onClick={() => setIsPlayingAudio(!isPlayingAudio)}>
-              {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+        {/* Audio Player Bar (Listen to Article) */}
+        <div className={`max-w-[760px] mx-auto border rounded-sm p-3 mb-8 transition-colors ${
+          readingTheme === 'night' ? 'bg-[#202023] border-[#2e2e32]' : readingTheme === 'sepia' ? 'bg-[#f4eedf] border-[#dfd6c0]' : 'bg-gray-50 border-gray-200'
+        }`}>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors shadow-xs"
+                onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+              >
+                {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-sans font-bold block leading-tight ${readingTheme === 'night' ? 'text-gray-100' : 'text-gray-900'}`}>
+                    Listen to this article
+                  </span>
+                  {isPlayingAudio && (
+                    <div className="flex items-end gap-0.5 h-3">
+                      <span className="w-0.5 bg-[#567b95] h-full animate-pulse" />
+                      <span className="w-0.5 bg-[#567b95] h-2/3 animate-pulse" />
+                      <span className="w-0.5 bg-[#567b95] h-4/5 animate-pulse" />
+                      <span className="w-0.5 bg-[#567b95] h-1/2 animate-pulse" />
+                    </div>
+                  )}
+                </div>
+                <span className="text-[10px] text-gray-500 font-sans">Narrated by The New York Times Audio</span>
+              </div>
             </div>
-            <div>
-              <span className="text-xs font-sans font-bold text-gray-900 block leading-tight">Listen to this article</span>
-              <span className="text-[10px] text-gray-500 font-sans">Narrated by The New York Times Audio</span>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setAudioSpeed(audioSpeed === 1 ? 1.25 : audioSpeed === 1.25 ? 1.5 : 1)}
+                className={`text-[11px] font-mono font-bold border rounded px-2 py-0.5 transition-colors ${
+                  readingTheme === 'night' ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+                title="Playback speed"
+              >
+                {audioSpeed}x
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setAudioSpeed(audioSpeed === 1 ? 1.25 : audioSpeed === 1.25 ? 1.5 : 1)}
-              className="text-[11px] font-mono font-bold text-gray-700 bg-white border border-gray-300 rounded px-2 py-0.5 hover:bg-gray-100"
-              title="Playback speed"
-            >
-              {audioSpeed}x
-            </button>
-          </div>
-        </div>
-
-        {/* Audio Scrubber */}
-        <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden cursor-pointer"
-             onClick={(e) => {
-               const rect = e.currentTarget.getBoundingClientRect();
-               const clickX = e.clientX - rect.left;
-               setAudioProgress(Math.min(100, Math.max(0, (clickX / rect.width) * 100)));
-             }}>
+          {/* Audio Scrubber */}
           <div
-            className="bg-[#567b95] h-full transition-all duration-300"
-            style={{ width: `${audioProgress}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Lead Visual Imagery */}
-      {article.imageUrl && (
-        <figure className="max-w-[880px] mx-auto mb-8 space-y-2">
-          <div className="border border-gray-200 overflow-hidden bg-gray-100">
-            <img
-              src={useHotlinkImage && article.hotlinkPlaceholder ? article.hotlinkPlaceholder : article.imageUrl}
-              alt={article.title}
-              className="w-full h-auto object-cover max-h-[540px]"
-              referrerPolicy="no-referrer"
+            className="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden cursor-pointer"
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              setAudioProgress(Math.min(100, Math.max(0, (clickX / rect.width) * 100)));
+            }}
+          >
+            <div
+              className="bg-[#567b95] h-full transition-all duration-300"
+              style={{ width: `${audioProgress}%` }}
             />
           </div>
-          <figcaption className="text-xs font-sans text-gray-500 flex flex-col sm:flex-row justify-between sm:items-center pt-1 gap-1">
-            <span>{article.imageCaption || article.title}</span>
-            <span className="text-gray-400 font-medium">{article.imageCredit || 'The New York Times'}</span>
-          </figcaption>
-        </figure>
-      )}
+        </div>
 
-      {/* Article Body Content */}
-      <div className="max-w-[700px] mx-auto font-nyt-serif text-gray-900 space-y-5">
+        {/* Lead Visual Imagery */}
+        {article.imageUrl && (
+          <figure className="max-w-[880px] mx-auto mb-8 space-y-2">
+            <div className="border border-gray-200 overflow-hidden bg-gray-100 shadow-xs">
+              <img
+                src={useHotlinkImage && article.hotlinkPlaceholder ? article.hotlinkPlaceholder : article.imageUrl}
+                alt={article.title}
+                className="w-full h-auto object-cover max-h-[540px]"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <figcaption className="text-xs font-sans text-gray-500 flex flex-col sm:flex-row justify-between sm:items-center pt-1 gap-1">
+              <span>{article.imageCaption || article.title}</span>
+              <span className="text-gray-400 font-medium">{article.imageCredit || 'The New York Times'}</span>
+            </figcaption>
+          </figure>
+        )}
+
+        {/* Article Body Content */}
+        <div className={`max-w-[700px] mx-auto font-nyt-serif space-y-5 ${
+          readingTheme === 'night' ? 'text-gray-200' : readingTheme === 'sepia' ? 'text-[#2c2621]' : 'text-gray-900'
+        }`}>
         {article.paragraphs.map((paragraph, index) => {
           if (index === 0) {
             return (
@@ -423,6 +506,7 @@ export const ArticleReaderView: React.FC<ArticleReaderViewProps> = ({
         </div>
       </section>
 
+      </div>
     </div>
   );
 };

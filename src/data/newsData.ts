@@ -245,6 +245,10 @@ export const ARTICLES: Record<string, Article> = {
     date: "Wednesday, October 15, 2025",
     readTime: "4 MIN READ",
     section: "Opinion",
+    imageUrl: "/src/assets/images/nyt_dowd_portrait_1792031953355.jpg",
+    hotlinkPlaceholder: "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
+    imageCaption: "Maureen Dowd, New York Times Opinion Columnist.",
+    imageCredit: "The New York Times",
     paragraphs: [
       "WASHINGTON — There is a particular pitch of whisper that reverberates through the wood-paneled parlors of the Metropolitan Club when an administration changes guard.",
       "The grandees who insisted they would never compromise are already dusting off their tuxedo studs and practicing their obsequious chuckles for the inauguration galas.",
@@ -263,6 +267,10 @@ export const ARTICLES: Record<string, Article> = {
     date: "Wednesday, October 15, 2025",
     readTime: "6 MIN READ",
     section: "Opinion",
+    imageUrl: "/src/assets/images/nyt_krugman_portrait_1792031952902.jpg",
+    hotlinkPlaceholder: "https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg",
+    imageCaption: "Paul Krugman, Nobel Laureate and New York Times Columnist.",
+    imageCredit: "Fred R. Conrad/The New York Times",
     paragraphs: [
       "For three consecutive years, a chorus of orthodox economic commentators insisted that the United States could not conquer post-pandemic inflation without inflicting a brutal recession and driving millions into unemployment.",
       "Yet here we are in the autumn of 2025: core inflation has decelerated to within striking distance of the central bank's target, while unemployment remains near generational lows and real wage gains continue for working-class households.",
